@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import alanBtn from "@alan-ai/alan-sdk-web";
+import "./App.css";
+import NewsCards from "./components/NewsCards";
+
+const alanKey =
+  "ef6395084b33660d20dce93ec226790b2e956eca572e1d8b807a3e2338fdd0dc/stage";
 
 function App() {
+  const [newsArticles, setNewsArticles] = useState([]);
+
+  useEffect(() => {
+    alanBtn({
+      key: alanKey,
+      onCommand: ({ command, articles }) => {
+        if (command === "newHeadlines") {
+          setNewsArticles(articles);
+        }
+      },
+    });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {newsArticles.length ? <NewsCards articles={newsArticles} /> : ""}
     </div>
   );
 }
